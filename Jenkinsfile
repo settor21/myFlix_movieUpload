@@ -19,7 +19,7 @@ pipeline {
             }
         }
 
-        stage('Deploy Repo to Prod. Server') {
+        stage('Deploy Repo to DB Server') {
             steps {
                 script {
                     sh 'echo Packaging files ...'
@@ -32,7 +32,7 @@ pipeline {
             }
         }
 
-        stage('Dockerize Application') {
+        stage('Dockerize GCP Upload Interface') {
             steps {
                 script {
                     sh "ssh -o StrictHostKeyChecking=no ${PROD_USERNAME}@${PROD_SERVER} 'cd myflix/movie-upload && docker build -t ${DOCKER_IMAGE_NAME} .'"
