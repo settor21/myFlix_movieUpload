@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         PROD_USERNAME = 'amedikusettor'
-        PROD_SERVER = '34.139.58.141'
+        PROD_SERVER = '34.121.116.117'
         PROD_DIR = '/home/amedikusettor/myflix/movie-upload'
         DOCKER_IMAGE_NAME = 'movie-upload-deployment'
         DOCKER_CONTAINER_NAME = 'movie-upload'
