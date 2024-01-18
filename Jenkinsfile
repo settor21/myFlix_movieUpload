@@ -23,7 +23,8 @@ pipeline {
             steps {
                 script {
                     sh 'echo Packaging files ...'
-                    sh 'tar -czf movieupload_files.tar.gz *'
+                    sh 'rm -f movieupload_files.tar.gz || true'
+                    sh 'tar -czf movieupload_files.tar.gz * || true'
                     sh "scp -o StrictHostKeyChecking=no movieupload_files.tar.gz ${PROD_USERNAME}@${PROD_SERVER}:${PROD_DIR}"
                     sh 'echo Files transferred to server. Unpacking ...'
                     sh "ssh -o StrictHostKeyChecking=no ${PROD_USERNAME}@${PROD_SERVER} 'pwd && cd myflix/movie-upload && tar -xzf movieupload_files.tar.gz && ls -l'"
