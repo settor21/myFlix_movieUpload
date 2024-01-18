@@ -6,5 +6,5 @@ opencv-python
 numpy
 requests
 gunicorn
-cv2
+opencv-python
 datetime
