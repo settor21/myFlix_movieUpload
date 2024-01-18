@@ -1,4 +1,8 @@
 Flask
+Werkzeug
 pymongo
 google-cloud-storage
+opencv-python
+numpy
 requests
+urllibparse

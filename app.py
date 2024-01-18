@@ -3,18 +3,31 @@ from werkzeug.utils import secure_filename
 from pymongo import MongoClient, DESCENDING
 from google.cloud import storage
 from datetime import datetime
+from urllib.parse import quote_plus
 import cv2
-from io import BytesIO
 import os
-import numpy as np
+
 
 app = Flask(__name__)
 UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = {'mp4'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-mongo_client = MongoClient(
-    'mongodb+srv://amedikusettor:Skaq0084@myflixproject.soxjrzv.mongodb.net/?retryWrites=true&w=majority')
+# Initialize MongoDB client
+username = 'amedikusettor'
+password = 'Praisehim69%'
+
+# Escape the username and password
+escaped_username = quote_plus(username)
+escaped_password = quote_plus(password)
+
+# Construct the MongoDB URI with escaped username and password
+mongo_uri = f'mongodb://{escaped_username}:{escaped_password}@35.239.170.49:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.1.1'
+
+# Create the MongoClient
+mongo_client = MongoClient(mongo_uri)
+
+
 db = mongo_client['movieInfo']  # Change to your actual database name
 metadata_collection = db['metadata']
 
@@ -198,4 +211,4 @@ def get_update_count(title, release_year, filename):
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", debug=False, port=6001)
+    app.run(host="0.0.0.0", debug=True, port=6001)
