@@ -2,9 +2,9 @@ Flask
 Werkzeug
 pymongo
 google-cloud-storage
+numpy
 opencv-python
 numpy
 requests
 gunicorn
-opencv-python
 datetime
