@@ -56,6 +56,7 @@ def upload_movie():
     if request.method == 'POST':
         # Get file from the form
         movie_file = request.files['movieFile']
+        # thumbnail_file = request.files['thumbnailFile']
         title = request.form['title']
         release_year = request.form['releaseYear']
         plot = request.form['plot']
@@ -81,48 +82,6 @@ def upload_movie():
         # Check if the file is selected
         if movie_file and allowed_file(movie_file.filename):
             filename = secure_filename(movie_file.filename)
-            video_path = os.path.join(app.config['UPLOAD_FOLDER'], 'temp.mp4')
-            if not os.path.exists(app.config['UPLOAD_FOLDER']):
-                os.makedirs(app.config['UPLOAD_FOLDER'])
-            i=0
-            # Stream the movie file to the temporary location and break after capturing the first frame
-            with open(video_path, 'wb') as temp_file:
-                while i<5:
-                    chunk = movie_file.stream.read(8192)
-                    if not chunk:
-                        break
-                    temp_file.write(chunk)
-
-                    # Open the temporary video file to check if the first frame is captured
-                    cap = cv2.VideoCapture(video_path)
-                    success, _ = cap.read()
-                    cap.release()
-
-                    if success:
-                        break
-                    i+=1
-
-            # Reset the stream to the beginning
-            movie_file.seek(0)
-            # Generate thumbnail
-            thumbnail_filename = os.path.splitext(
-                os.path.basename(filename))[0] + '.png'
-
-            thumbnail_path = os.path.join(
-                app.config['UPLOAD_FOLDER'], thumbnail_filename)
-            generate_thumbnail(video_path, thumbnail_path)
-
-            # Specify the thumbnail file path in the bucket
-            thumbnail_file_path = f'thumbnail/{thumbnail_filename}'
-
-            # Upload the thumbnail to the bucket
-            upload_thumbnail_to_bucket(thumbnail_path, thumbnail_file_path)
-
-            # Remove the temporary video file and thumbnail
-            os.remove(video_path)
-            os.remove(thumbnail_path)
-
-            # upload_thumbnail_to_bucket('myflix-staticfiles',thumbnail_path,f'thumbnail/{thumbnail_name}')
 
             # Assuming tier is either 'ad-tier' or 'paid-tier'
             movie_file_path = f'{tier}/{filename}'
@@ -163,25 +122,6 @@ def upload_movie():
 
     # Render the form again if not successful
     return render_template('movieUpload.html')
-
-
-def generate_thumbnail(video_path, thumbnail_path):
-    cap = cv2.VideoCapture(video_path)
-    success, image = cap.read()
-    if success:
-        cv2.imwrite(thumbnail_path, image)
-    cap.release()
-
-
-def upload_thumbnail_to_bucket(thumbnail_path, thumbnail_file_path):
-    # Get the bucket
-    bucket = client.get_bucket("myflix-staticfiles")
-
-    # Create a blob with the thumbnail file path
-    blob = bucket.blob(thumbnail_file_path)
-
-    # Upload the thumbnail to the bucket
-    blob.upload_from_filename(thumbnail_path)
 
 
 def allowed_file(filename):
