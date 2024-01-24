@@ -84,9 +84,10 @@ def upload_movie():
             video_path = os.path.join(app.config['UPLOAD_FOLDER'], 'temp.mp4')
             if not os.path.exists(app.config['UPLOAD_FOLDER']):
                 os.makedirs(app.config['UPLOAD_FOLDER'])
+            i=0
             # Stream the movie file to the temporary location and break after capturing the first frame
             with open(video_path, 'wb') as temp_file:
-                while True:
+                while i<5:
                     chunk = movie_file.stream.read(8192)
                     if not chunk:
                         break
@@ -99,6 +100,7 @@ def upload_movie():
 
                     if success:
                         break
+                    i+=1
 
             # Reset the stream to the beginning
             movie_file.seek(0)
